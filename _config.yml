@@ -1,0 +1,4 @@
+name: phy5ics
+markdown: redcarpet
+pygments: true
+permalink: /:year/:month/:day/:title
