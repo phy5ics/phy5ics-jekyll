@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Starting Over with the Make Controller + AS3 - Part 1</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Starting Over with the Make Controller + AS3 - Part 1</h2>
+<p class="meta">08 Sep 2007</p>
+
+<div class="post">
+<p>MakingThings just released a bunch of software updates involved with Flash and the Make Controller that nullifies a lot of my previous work with AS3 and flosc.  While some of the components still seem a bit buggy, they represent some major improvements.  The best news to come out of this round of releases is that the <em>flosc</em> socket server can now be ditched (sorry, Ben Chun) in favor of connecting to the Make Controller using a new version of <em>mchelper</em>.  Additionally it is now possible, from Flash,  to connect to a board using either USB or Ethernet.  As a result, I&#39;m starting my series over to take these latest developments into account.
+<a id="more"></a><a id="more-30"></a>
+To get stared, grab the latest versions of the following files from <a href="http://makingthings.com/resources/downloads" target="_blank">MakingThings</a>:</p>
+
+<ul>
+<li>mchelper 2.0</li>
+<li>heavy 1.2 rc4</li>
+<li>New AS3 classes</li>
+</ul>
+
+<p><strong>Step 1: Erase the Current Firmware</strong>
+To do this, connect power to the board and use a jumper on the 2 pins marked &quot;ERASE&quot; near the JTAG connector on the board.  This will erase everything on the board including the firmware.  Turn off the power, remove the jumper, then reconnect the power to restart the board.  This will put the board into receive mode.</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/09/erase_board.gif" title="Erase Pins"><img src="http://phy5ics.com/blog/wp-content/uploads/2007/09/erase_board.gif" alt="Erase Pins" /></a>
+<strong>
+Step 2: Upload heavy 1.2 rc4</strong>
+There seems to be a bug in <em>mchelper 2.0</em> in that the option to upload firmware to the Make Controller is always grayed-out.  So you&#39;ll need to use a previous version in order to install the new <em>heavy 1.2 rc4</em> firmware.  To do this, fire up <em>mchelper 1.2</em> then simply select the .bin file and click upload.  Restart the board after the firmware has updated.</p>
+
+<p><strong>Step 3: Connecting to Flash</strong>
+Close <em>mchelper 1.2</em> and open up <em>mchelper 2.0</em>.  Send a test message to the board to make sure that everything is setup properly.</p>
+
+<p><em>mchelper 2.0</em> now has an XML socket server built into it (unfortunately not a binary socket server), so rather than connecting to flosc as we did in the past, we connect to mchelper.  This is straightforward enough:</p>
+
+<p><code>var mcfConnection:McFlashConnect = new McFlashConnect();</code></p>
+
+<p>From there, it&#39;s just a matter of setting up a bunch of event listeners, which isn&#39;t all that different from my previous examples:</p>
+
+<p><code>mcfConnection.addEventListener(McEvent.ON<em>CONNECT, onConnect);</code>
+<code>mcfConnection.addEventListener(McEvent.ON</em>CONNECT<em>ERROR, onConnectError);</code>
+<code>mcfConnection.addEventListener(McEvent.ON</em>CLOSE, onClose);</code>
+<code>mcfConnection.addEventListener(McEvent.ON<em>MESSAGE</em>IN, onMessageIn);</code>
+<code>mcfConnection.addEventListener(McEvent.ON<em>BOARD</em>ARRIVED, onBoardArrived);</code>
+<code>mcfConnection.addEventListener(McEvent.ON<em>BOARD</em>REMOVED, onBoardRemoved);</code>
+<code>mcfConnection.connect();</code></p>
+
+<p>One of the primary differences between the new MakingThings AS3 classes and the others that I&#39;ve written about is the addition of some methods to not only connect to <em>mchelper</em> (previously <em>flosc</em>), but also to determine when a controller board is actually connected.  This is a significant improvement, as then you can be sure that you&#39;re actually connected to the board.  Additionally, the way the new classes are written opens up the possibility of connecting multiple boards, as they can be addressed individually by IP address, USB address, name (i.e. <code>/system/name</code>) or serial number, which is a super cool feature.</p>
+
+<p>Once the connection to <em>mchelper</em> is established and a board is detected, sending and receiving OSC packets is rather straightforward.  Here&#39;s an example of how to send an OSC packet:</p>
+
+<p><code>mcfConnection.send(&quot;/system/name&quot;, []);</code></p>
+
+<p>A really cool feature of <em>mchelper 2.0</em> is that OSC packets that are being sent and received from Flash are traced out to the dialog window in <em>mchelper</em>, which helps tremendously with debugging.  After compiling a SWF that sends an OSC packet containing <code>/system/name</code> you should see the following in mchelper:</p>
+
+<p><code>XML server --- New XML Connection</code>
+<code>XML server --- /system/name</code>
+<code>USB --- /system/name Make Controller Kit</code></p>
+
+<p>That&#39;s really all there is to it.  Thankfully, the new MakingThings code is much less unwieldy and ditches flosc, so kudos to them for making much-needed improvements.</p>
+
+<p><strong>Step 4: Conclusion - Let the Hacking Begin</strong>
+I haven&#39;t had a chance to look at the new AS3 classes in great detail, but there are some nice new features.  However, one thing that I noticed that was a bit disappointing was that all of the XML parsing is being done using <code>XMLDocument</code> objects, which have been deprecated in AS3.  There&#39;s no reason why this shouldn&#39;t be using Flash Player 9&#39;s native E4X capabilities, so that&#39;ll be one of the first things that I rewrite, being as how I already did that in the MakingThings AS2 classes that I ported to AS3 a while back.</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/09/ConnectionTest.as">Download the full sample class here</a></p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

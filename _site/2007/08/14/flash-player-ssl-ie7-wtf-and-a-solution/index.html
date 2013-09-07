@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Flash Player + SSL + IE7 = WTF (and a solution)</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Flash Player + SSL + IE7 = WTF (and a solution)</h2>
+<p class="meta">14 Aug 2007</p>
+
+<div class="post">
+<p><strong>Use Case</strong>
+I&#39;ve been working on a project with a team of some of our really talented Flash developers (props Ben, Leon and Gabriel) where a Flex app being served from a non-secure URL via plain HTTP needs to connect to and consume data from another server via HTTPS and have run into some issues and a workaround that I&#39;d like to share.  For that particular project, the other server is a SOAP service running behind SSL with a Flex app served over HTTP consuming those services.  However, these concepts also apply to any external data consumed by the Flash Player.  A simplified diagram of the system is below:</p>
+
+<p><a id="more"></a><a id="more-25"></a></p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/08/system_architecture.jpg" title="HTTP/HTTPS Architecture Example"><img src="http://phy5ics.com/blog/wp-content/uploads/2007/08/system_architecture.jpg" alt="HTTP/HTTPS Architecture Example" /></a></p>
+
+<p>Pretty basic use case, right?  Should be pretty straightforward once the usual suspects are addressed as follows, right?  No, of course not, otherwise this article wouldn&#39;t actually be helpful.  I&#39;ll start with the server environment and SSL certificates.</p>
+
+<p><strong>SSL Certificates</strong>
+On the development boxes that I&#39;ve been using, self-signed certificates are installed, which means that an SSL certificate is created DIY on the server rather than purchasing one from a certificate authority like Verisign, Thawte, etc.  This is a common practice for development systems, internal systems and others where end-users may not be concerned that the certificate was not issued by a certificate authority.</p>
+
+<p>Because of that, when pointing a browser (in this case Safari, FF or IE6 are the ones that I&#39;m testing against) at for example https://dev.services.com/, a pop-up application window with a security warning appears asking if the certificate should be accepted.  (This is an important point that I&#39;ll be coming back to)  Clicking yes acknowledges that you are aware of the security implications of interacting with a server that has one or more of the following characteristics:
+<ul>
+    <li>The SSL certificate has expired</li>
+    <li>The domain of the server does not match the domain of the SSL certificate</li>
+    <li>The SSL certificate is not signed by a certificate authority</li>
+</ul>
+There may be other instances when this security dialog appears, but these are the most common.</p>
+
+<p><strong>A Special Browser from Special People</strong>
+With IE7, the above is almost identical, with one important distinction.  That is that IE7 does not use a different application window to display the security warning.  It redirects to a local page that displays the security warning as the following screen capture illustrates:</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/08/ie7_cert_warning.png" title="IE7 Certificate Warning"><img src="http://phy5ics.com/blog/wp-content/uploads/2007/08/ie7_cert_warning.thumbnail.png" alt="IE7 Certificate Warning" /></a></p>
+
+<p>As we&#39;ll see later, this comes back to bite us in the ass.  However, let&#39;s take at all the pieces that need to come together to make this work.</p>
+
+<p><strong>Crossdomain.xml File</strong>
+As with all server-to-server communication, a crossdomain.xml file is required on the https://dev.services.com so that the Flex app on http://dev.application.com can talk to it.  For testing on the development box, the crossdomain.xml as such:</p>
+
+<p><allow-access-from domain="http://dev.application.com" secure="false"></allow-access-from></p>
+
+<p>In this case, the secure=&quot;false&quot; attribute is allegedly supposed to signal the Flash Player to ignore certificate warnings and allow the loading of content from the secure context.  I have found a wealth of contradictory information on this topic and because it doesn&#39;t really seem to be clear, since this is a development server, I&#39;m just going to leave it in there because I know that the certificate does not match the domain and is self-signed.  This attribute should be removed on production servers, as according to <a href="http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&amp;sliceId=1">Adobe</a>, it may compromise security:</p>
+
+<p>&quot;A secure server that allows access to movies hosted via a non-secure protocol
+It is not advisable to permit HTTP content to access HTTPS content. This practice can compromise the security offered by HTTPS.&quot;</p>
+
+<p>This comment is seemingly contradictory, so I&#39;m not entirely certain that it is true.  I can understand how loading from HTTP into HTTPS is a security issue, but not the other way around.</p>
+
+<p><strong>HTTP Headers</strong>
+So, despite having this configured with secure=&quot;false&quot;, there is another aspect to this that will be a pain if you test in Firefox and then try to get it to work in any version of Internet Explorer, as it will fail silently in IE.  That is the issue of HTTP headers that are sent by a web server in response to a request from a browser.  In IE, because it is the short bus of browsers, any HTTP responses sent from a secure context to an insecure one are ignored.  I don&#39;t know enough about the inner workings of IE to know why, however, it fails silently.</p>
+
+<p>To get around this and allow HTTP responses to be received over SSL from a server, it is necessary to change either configuration at the web server level on https://dev.services.com or set the headers at a code level to ensure that the proper headers are being sent with HTTP responses.  That HTTP header is as follows:</p>
+
+<p><code>Cache-Control: no-store</code></p>
+
+<p>There is a great deal of disagreement and contradiction on this topic, as can be seen with nearly every comment related to this <a href="http://www.blog.lessrain.com/?p=276">blog post</a>.  However, according to my testing, and the word of my esteemed colleague, <a href="http://www.flashsupport.com/">Robert Reinhardt</a>, this is the one that indeed works.</p>
+
+<p><strong>The IE7 Issue</strong>
+Now, with all of that set up, it should be possible to load data into the Flex app from the secured domain via HTTPS.  In testing this with Firefox, Safari and IE6, once the crossdomain.xml is requested, a security warning is triggered that then asks the user to accept the certificate for the secure domain that the Flash Player is attempting to communicate with.  If the certificate is accepted, the crossdomain.xml file is loaded and then the Flash Player can access resources on that server.</p>
+
+<p>In attempting this in a server environment where the certificate triggers the certificate security warning, the following following error is thrown (if the debug version is installed or errors are trapped and traced out, otherwise it just fails silently):</p>
+
+<p><code>[RPC Fault faultString=&quot;Security error accessing url&quot; faultCode=&quot;Channel.Security.Error&quot; faultDetail=&quot;Destination: DefaultHTTP&quot;]</code></p>
+
+<p>Using a tool like <a href="http://www.blunck.se/iehttpheaders/iehttpheaders.html">IEHTTPHeaders</a> or <a href="http://www.iewatch.com/ieprofessional.aspx">IEWatch Professional</a> and looking at the HTTP headers and what requests are made, it becomes apparent that the crossdomain.xml is not being loaded at all.  It shows its status as &quot;aborted&quot;, meaning that IE7 refuses to actually load it.  As a result, this is the reason that the call is failing.  The only ways around this that I have found are:
+<ol>
+    <li>Navigate to the server that is hosting the crossdomain.xml file manually and accept the certificate then navigate back to the page with the Flash Player and then try to access the other server.</li>
+    <li>Make sure that the server that is being connected to does not throw any certificate security warnings in IE7.</li>
+</ol>
+Hopefully these tips save someone else&#39;s time and blood pressure levels, it definitely affected both of mine negatively.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

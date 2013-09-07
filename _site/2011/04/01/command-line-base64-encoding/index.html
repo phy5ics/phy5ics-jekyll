@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Command Line Base64 Encoding</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Command Line Base64 Encoding</h2>
+<p class="meta">01 Apr 2011</p>
+
+<div class="post">
+<p>I&#39;m currently authoring an AIR 2.5 application in HTML/CSS/JS and ran into some issues with @font-face embedding where no matter what I did the fonts would not load and render correctly despite trying both TTF and OTF versions. &Acirc;&nbsp;After that, I opted to try base64-encoding of the fonts for inclusion via a data url, since they are now supported in AIR. &Acirc;&nbsp;I&#39;m running on OS X and have openssl installed, so I opted to run the following command, which I&#39;ve used in the past for generated base64-encoded files for other Webkit-based projects and didn&#39;t have any issues:
+<p><code>shell# openssl base64 -in UniversLTStd.otf -out Std</code></p>
+This produced a proper base64 file that worked perfectly in Safari, but when the same encoded file was inserted into CSS and launched in the AIR runtime, it resulted in the display of the default font.  After ruminating a bit on the issue, I suspected that the line breaks produced by the openssl encoding were the issue, and not feeling particularly like removing line breaks by hand on 709 lines of code, I busted out the following:
+<p><code>shell# tr -d &#39;\r\n&#39; &lt; Std &gt; StdNoBreaks</code></p>
+I then used the output in the resulting file as the data url and it worked like a charm in the AIR runtime with the following CSS:
+<p>
+<code>src: url(&quot;data:font/opentype;charset=utf-8;base64,[INSERT<em>BASE64</em>ENCODED<em>DATA</em>HERE]&quot;);</code></p></p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

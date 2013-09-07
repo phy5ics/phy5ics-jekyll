@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Getting Started with AS3 and the Make Controller - Part 4</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Getting Started with AS3 and the Make Controller - Part 4</h2>
+<p class="meta">03 Aug 2007</p>
+
+<div class="post">
+<p><strong>Doing Something &quot;Useful&quot; With Sensor Input </strong></p>
+
+<p>In Parts 1-3, we spent some time examining the basics of the Make Controller, OSC and how it works with (or in some cases doesn&#39;t work) ActionScript 3.   Now, we can start to do some things that might actually be construed as being useful for a project.  To start, let&#39;s get the hardware set up by hooking up a light sensor to analogin0.  With that done, we can write some code to use the input from the light sensor as it detects ambient light levels to control the opacity of a sprite on the stage of our SWF.</p>
+
+<p><a id="more"></a><a id="more-20"></a>
+In keeping with the grand tradition of laziness, ahem, I mean re-usable code, we&#39;ll start with the code from the last example, as that provides a decent framework to start with.  In the last example, the values passed along by OSC from the sensor were simply traced out to Flash&#39;s output console.  To do something useful with it, the key is to look at the incoming packets and parse out the ones that we need to pass on to other functions.  This can be done adding a switch statement in the onPacketIn event handler as follows:
+<pre lang="actionscript">
+private function onPacketIn(evtOSC:OSCConnectionEvent):void {
+switch(evtOSC.data.name) {
+case &quot;/analogin/0/value&quot;:
+changeBackgroundAlpha(evtOSC.data.data);
+break;
+}
+}</pre>
+<pre lang="actionscript"></pre>
+Note: It is of course possible to use an else/if statement to accommodate this same functionality.  In general, I opt for case statements, as I know the explicit values that are to be expected in the switch.  This is also more efficient, as the AVM knows what values to look for and ignores the rest, whereas in an else/if statement, all values must be evaluated regardless of whether or not they are relevant to that piece of code.  That being said, to &quot;listen&quot; to another input, another case would be added that contains the address of the input being listened to and also a function to handle that input.</p>
+
+<p>Here, as an OSCConnectionEvent object is passed into the function, we look for the name of a specific address on the application board (evtOSC.data.name) that sent the OSC packet.  When that address matches something that is needed by our application, we can then send the value of that input to a function that does something useful with it.  In this case, we&#39;ll pass the value sent by the light sensor to a function called changeBackgroundAlpha().  That function looks like:
+<pre lang="actionscript">
+private function changeBackgroundAlpha(intValue:int):void {
+var nAlphaRatio:Number = (1 / 1024);
+var nNewAlpha = nAlphaRatio * intValue;
+this.getChildAt(0).alpha = nNewAlpha;
+}</pre>
+<pre lang="actionscript"></pre>
+Take a look and notice that I&#39;m setting up a ratio between the input value, which could be anywhere from 0-1023 and an alpha value, which can only be 0-100.  After that relationship is established with some simple math, we can set the value of our sprite on the stage to a new value that is directly proportional to the value determined by the sensor.</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/08/makecontroller_as3_part4_examples_2.zip" title="Make Controller AS3 Part 4 Example Files">Make Controller AS3 Part 4 Example Files</a></p>
+
+<p>In the next article, we&#39;ll look at using ActionScript to mediate communication between sensors and an output devices that are attached to the Make Controller.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Bluetooth + GPS + ActionScript - Part 1 - Hardware</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Bluetooth + GPS + ActionScript - Part 1 - Hardware</h2>
+<p class="meta">16 Mar 2008</p>
+
+<div class="post">
+<p><strong>Overview</strong>
+For this project, my goal was to get GPS data into my Mac for some visualization experiments with ActionScript.  After some initial prototypes that worked well using an RS232-to-USB converter, I decided that wasn&#39;t slick enough and had it too many wires.  I like things nice and clean around my desk, so I opted for adding Bluetooth in place of a USB converter.</p>
+
+<p>After experimenting with some different methods, some using microprocessors and some not, I opted for the simpler route, eliminating the microprocessor.  A microprocessor doesn&#39;t add anything other than cost for the basic purpose of this project.  Although stay tuned for another posting about integrating a similar configuration with the Make Controller and Arduino microprocessors.</p>
+
+<p><a id="more"></a><a id="more-43"></a>
+<strong>Parts List</strong>
+<ul>
+    <li> <a href="http://www.sparkfun.com/commerce/product_info.php?products_id=114" target="_blank">5V regulated power supply</a></li>
+    <li> <a href="http://www.sparkfun.com/commerce/product_info.php?products_id=158" target="_blank">BlueSMiRF Bluetooth Module</a></li>
+    <li> <a href="http://www.sparkfun.com/commerce/product_info.php?products_id=465" target="_blank">EM406A GPS Module</a></li>
+    <li> Extra 6-pin interface cable</li>
+    <li> 9V battery holder</li>
+    <li> Headers</li>
+    <li> Breadboard</li>
+    <li> Solid 22-gauge wire</li>
+    <li> Soldering iron</li>
+</ul>
+<strong>5v Power Supply</strong>
+Select a 5V power supply to use.  In this case, I&#39;m using a switchable 3.3V/5V power supply kit that I picked up from SparkFun.  I made a slight modification to it and soldered a 9V battery adaptor to it to make it a bit more flexible and truly wireless rather than using the standard 9V DC wall adaptor.  This is just my preference for prototyping.  When I get down to a final design, I generally switch it up in favor of a simple voltage regulator to save space and weight.</p>
+
+<p><strong>BlueSMiRF Embedded Bluetooth Serial RF Link</strong>
+The BlueSMiRF module is sweet little device, providing an easy way to link any project using a serial interface to a computer (or another BlueSMiRF module).  Simply connect the TX, RX to another serial device along with vcc (4.5V-5.5V) and ground and it is ready to pair.</p>
+
+<p><strong>EM406A GPS Board</strong>
+This small board uses the SiRF Star III chipset, which is a nice chipset that is relatively stingy on power supply and can fix its position - known as TTFF (Time To First Fix), even in indoor environments, in a matter of 30 seconds or so.  Just keep in mind that the odd peach-colored ceramic part is the antenna and should point towards the sky.   Many other chipsets offer significantly less in terms of performance and most are unable to fix a position unless outside.  I was sold on it since happens to be the same chipset that I have in my Garmin CS60x, a considerably more expensive device.</p>
+
+<p>Besides all that, the EM406A is a perfect candidate for integration with physical computing projects because it&#39;s output is serial.  It starts outputting NMEA strings at 4800 baud once its position is fixed.  NMEA 0183 is a standard with which GPS data is transmitted from a device using comma-delimited strings.  For more information on NMEA, consult <a href="http://www.gpsinformation.org/dale/nmea.htm" target="_blank">this resource</a>.</p>
+
+<p>The documentation for the board itself is well done.  In addition to the NMEA strings that are broadcast from the board itself, the EM406A can have commands sent to it via its serial interface to get specific NMEA data back.&Acirc;&nbsp; The only catch is be sure to get an 6-pin extra interface cable along with the board itself.&Acirc;&nbsp; I cut the interface cable in half and then soldered the wires some headers to make prototyping easier.  Otherwise it&#39;s going to be impossible to do anything useful with it.</p>
+
+<p><strong>Schematic</strong>
+Now that we have all that down, here&#39;s a little schematic of how everything is hooked up together:</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2008/11/gps_bt_schematic_rev1.jpg"><img class="alignnone size-full wp-image-54" title="gps_bt_schematic_rev1" src="http://phy5ics.com/blog/wp-content/uploads/2008/11/gps_bt_schematic_rev1.jpg" /></a></p>
+
+<p><strong>Photograph</strong></p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2008/11/gps_bt_2.jpg"><img class="alignnone size-full wp-image-56" title="gps_bt_2" src="http://phy5ics.com/blog/wp-content/uploads/2008/11/gps_bt_2.jpg" /></a>
+<strong>Next Article</strong>
+In the next post, I&#39;ll be working through the software aspects of this project.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

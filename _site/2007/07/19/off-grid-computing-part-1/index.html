@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Off-Grid Computing: Part 1</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Off-Grid Computing: Part 1</h2>
+<p class="meta">19 Jul 2007</p>
+
+<div class="post">
+<p>The goal of this article is to relate several strategies and technologies to improve the efficiency in the collection, analysis and presentation of field data.  I have limited the suggestions to only technologies that are free (but not necessarily open-source) and/or utilize public APIs so as to make them accessible to an audience who constantly finds their budgets diminishing.  However, prior to getting into that, allow me to relate the context of some of these recommendations...</p>
+
+<p><a id="more"></a><a id="more-3"></a></p>
+
+<p>On the last leg of summer vacation I recently paid a visit to my brother in Northern Arizona. He doesn&#39;t live there, but rather co-habitates with a bunch of other hippies during the course of the summer and has done so for the last 3 consecutive summers. Now don&#39;t get the wrong idea, while he is a hippy, this isn&#39;t some weirdo commune. Actually, it does resemble one - with it&#39;s small town of multi-colored tents and contrasting bandannas.</p>
+
+<p>This is actually a USGS study being conducted in the Coconino National Forest that surrounds Flagstaff. He occupies the rather dubious position as one of the senior researchers on the project. As part of his responsibilities, he&#39;s helping 20-some-odd college students through a summer of banding birds, conducting vegitation surveys and manning the Forest Service walkie-talkie for signs of fire danger.</p>
+
+<p>While thoroughly enjoying spending my vacation virtually off-the-grid through a series of hiking, climbing and camping escapades, I couldn&#39;t help but fall back into some of my usual thinking regarding workflow, data, networking and interactivity. The event the really drew me back into this line of thinking was when checking in on a nesting site with my brother. Cresting over Rim Road, we encountered a thin plume of smoke not 20 meters from the nesting site. We immediately were struck by a moment of wonder of flames licking upwards, instilling a primal fascination, followed immediately by the more rational, sobering twinge of danger at what we were actually encountering - this being the ultimate in bad news for anyone with a crew in a tinder-dry National Forest.</p>
+
+<p>I recalled my GPS receiver that I had taken to toting around with me to passively record my adventures in the form of GPS coordinates. I marked the coordinates of the fire and wrote them on a scrap of paper, which I then handed to my brother. Picking up the Forest Service radio, he called in the coordinates to the Moqui Fire Lookout in accordance with regulations and what is to be expected from someone who earned their &quot;Red Card&quot; out of a requirement for working in the Alaskan wilderness.</p>
+
+<p>With little else to do other than head back to Bird Camp, as they call it, to make certain that all of the researchers were back from their days, that is exactly what we did. While rolling back in the giant Suburban marked with a University of Montana logo, mostly listening to the Forest Service radio for news of our fire and the 12 others that had been reported thus far that day, my mind wandered considering how else technology could be applied to a traditionally disconnected field.</p>
+
+<p>While I&#39;m not involved in academia, I deal quite a bit with data. As a result, numerous parallels between developing system architectures and conducting scientific studies are immediately striking.  The most notable being, the underlying shared characteristics involving what is essentially the collection, analysis and presentation of data.  From my brief experience in the field with my brother and his colleagues, it became apparent that they still very much have at least one foot strongly set in the punch card era.</p>
+
+<p>First, in looking at how survey plots are defined (although in their defense, this particular study was started 23 years ago), it is clear that this most fundamental layer of data in the form of geographic data is in the form of paper maps.  When one considers that the researches are gathering information on bird populations and the locations of their nests within physical spaces, it should be obvious that the correlation of gathered data to a location is of high importance.  So, let me introduce my first suggestion: a mapping API.</p>
+
+<p>The introduction of Google Maps opened up a great number of possibilities with regard to visualization of data as it relates to physical locations.  One of the earliest (in)famous mash-up applications was the Chicago Crime Map (http://chicagocrime.org).  While perhaps there are examples in academia of this sort of application, the ones that are best known are developed by nerds with an idea to create something new.  However, after several releases of the Google Maps API that made it more-and-more accessible to the average user, development has culminated in the My Maps feature.  The latest iteration that allows users to create and save maps with data overlays without writing a single line of code.</p>
+
+<p>While Google Maps is perhaps more well known than its Yahoo! conterpart, Yahoo! Maps have made great strides with their development and API, surpassing Google&#39;s in my opinion.  One of the great features of Yahoo! Maps are the API offerings in not only HTML/CSS/JS version, but also in a Flash versions that include AS2, AS3 and Flex libraries (see FlexQuake for an example).</p>
+
+<p>Regardless of  which one a researcher deems easier or more appropriate to implement, they are both free and provide an excellent starting point for the collection and visualization of data that relates to physical space.</p>
+
+<p><strong>References:</strong>
+<ul>
+    <li>http://www.google.com/apis/maps/</li>
+    <li>http://developer.yahoo.com/maps/</li>
+</ul>
+In Part 2, I will investigate additional mapping technologies, data collection and analysis.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

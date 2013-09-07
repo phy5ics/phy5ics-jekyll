@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>AS3 + Make Controller Important Update (AKA Not Part 5)</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>AS3 + Make Controller Important Update (AKA Not Part 5)</h2>
+<p class="meta">20 Aug 2007</p>
+
+<div class="post">
+<p>As those of you that have been reading along with the series might extrapolate, this post is supposed to be Part 5.  However, given some things that I&#39;ve discovered in the Fwiidom AS3 implementation as well as some issues in the MakingThings AS2 classes, which I then ported to AS3 and in the process propogated those bugs, this is now an update on some progress made with some collaboration and refactoring.</p>
+
+<p><a id="more"></a><a id="more-28"></a></p>
+
+<p>A couple weeks back I received some updates to the Fwiidom classes and the FLOSC server that a guy name Nacho (that&#39;s all I know about him or her) did via Adam at <a href="http://dustypixels.com/blog/" target="_blank">Dusty Pixels</a> (who created <a href="http://fwiidom.org" target="_blank">Fwiidom</a>).  I was super busy and didn&#39;t have time to put them through their paces until over the weekend.  When I did, I started noticing some really strange bugs where certain OSC commands would work (using the original FLOSC server - version 0.3.1), then by simply inserting a trace statement, they would cease working and other OSC commands that were previously broken miraculously started working.</p>
+
+<p>This drove me to the brink of insanity for about 4 hours during which I tested the Fwiidom classes, my ported MakingThings AS3 classes and the original MakingThings AS2 classes.  Then it dawned on me that the order of the <code>type</code> and <code>value</code> attributes in the XML that was being sent from the Flash Player to the FLOSC server was getting reversed and this was causing the issues.  After that, I remembered the update to the FLOSC server and referred back to the email from Adam.   Looking at that email again, I see the forwarded message from Nacho where he mentions that the FLOSC server was updated to parse the XML using the DOM, so that the order of attributes in the XML-formatted OSC messages sent to FLOSC didn&#39;t matter.  Doh!  Apparently he encountered the same problem as I and corrected it at the server level, rather than in ActionScript, as I had been attempting to do.</p>
+
+<p>So, I&#39;m going to work a bit more on some testing of the updated classes and refactoring of my ported AS3 classes and release mine and then work to coordinate with Adam and the mysterious Nacho to figure out the best way to share these updates.  From there, I&#39;ll continue on with Part 5 and go back to update some of the previous articles with relevant changes.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

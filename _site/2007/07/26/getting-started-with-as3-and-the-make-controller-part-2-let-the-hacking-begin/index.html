@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Getting Started with AS3 and the Make Controller - Part 2</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>Getting Started with AS3 and the Make Controller - Part 2</h2>
+<p class="meta">26 Jul 2007</p>
+
+<div class="post">
+<p>In attempting to wire up a slide potentiometer to the Make Controller and poll for its values using AS3, which was supposed to be Part 2 of this series of articles, I ran into a significant problem. (To understand what exactly I was trying to do, check out Getting Started with AS3 and the Make Controller - Part 3 - Determining Input Values.) After coding up my example for the article in AS3, I expected that when publishing the .SWF, everything would be working, right?  No, of course not.  That would be far too easy.  After checking and double-checking my code thinking that I probably just did something stupid while working on it late at night, I was stumped.  I slept on it and still couldn&#39;t figure it out.  After much frustration, I opted to revert back to AS2 to see if maybe there was an issue with the potentiometer and re-wrote the example using AS2 and the MakingThings AS2 classes and it worked a treat.</p>
+
+<p><a id="more"></a><a id="more-13"></a></p>
+
+<p>This led me to believe that the culprit had to be somewhere in the FWiidom classes, which wouldn&#39;t be all that surprising, given that they were designed and tested for use with a Wiimote.  The other possibility was that it might have been a bug with Flash Player 9 or the Flash 9 Alpha that I was using at the time. To eliminate this possibility, I did a direct port of the MakingThings classes over to AS3.  I didn&#39;t spend any time making any improvements to it because I was only curious to see if it would actually work, which it actually did.  All of a sudden I was receiving OSC packets from the Make Controller.</p>
+
+<p>That being said, I haven&#39;t done all that much testing on the AS3 version of those classes, but I&#39;ll make them available here for download without any promises as to its reliability:</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/07/makingthings_flosc_as3.zip" title="MakingThings FLOSC Classes AS3 Port">Download MakingThings FLOSC Classes AS3 Port</a></p>
+
+<p>I&#39;ll be sending these over to the MakingThings guys to check out, but if you download these and use them, I&#39;d love to get input on any issues that are discovered.</p>
+
+<p>Not being easily discouraged, I was still determined to figure out what the issue was with the FWiidom classes.  So, I began to examine the incoming and outgoing OSC packets and saw that there were actually packets being returned from the Make Controller.  This was good news and allowed me to follow the packets through the FWiidom classes.  I realized that the datatypes that are sent from the Make Controller are slightly different that what is expected to be received from a Wiimote.  In this case, the Make Controller sends a type &quot;i&quot; packet as a float, whereas the Wiimote sends a type &quot;f&quot; as a float.  In the Fwiidom classes, there was not a type==&quot;i&quot; in the conditional statement and no else statement, so it was not being evaluated anywhere.</p>
+
+<p>Once I figured this out, to fix this issue, I added the following code to the OSCConnection class after line 109:
+<pre lang="actionscript">} else if (type==&quot;i&quot;) {
+data.push(parseFloat(child.attributes.VALUE));</pre>
+<pre lang="actionscript"></pre>
+Compiling the SWF for the 39396216th time, I was amazed to see it was actually working.  So, as a result, I&#39;ll be getting in touch with the fine folks at FWiidom to see if they&#39;ll add this to their classes so that when people download them from their site to use with the Make Controller, they won&#39;t go insane trying it to figure out like I did.  In the meantime, here is the Fwiidom OSC package with my modification:</p>
+
+<p><a href="http://phy5ics.com/blog/wp-content/uploads/2007/07/fwiidom_flosc_makecontroller.zip" title="FWiidom Make Controller Update">Download FWiidom Make Controller Update</a></p>
+
+<p>Furthermore, I&#39;ll probably end up writing OSC bundles into the FWiidom classes, being as how they would be quite useful in complex projects.  I&#39;m assuming that they were not included in the FWiidom version because bundles are not implemented for the Wiimote.</p>
+
+<p>Now that we have that all straightened out, we can get back to the examples in Part 3 - Determining Input Values.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>

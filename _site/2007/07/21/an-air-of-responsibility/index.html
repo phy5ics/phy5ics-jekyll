@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>An AIR of Responsibility</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">phy5ics</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+
+                <h2>An AIR of Responsibility</h2>
+<p class="meta">21 Jul 2007</p>
+
+<div class="post">
+<p>I gave a brief talk to the Schematic tech team here in LA on some of what I learned at the onAIR event earlier in the week. While I talked plenty about the new features of AIR from a variety of perspectives, I felt that the introduction of a technology like AIR required a different perspective and more time to explain it.  An interesting aspect to the introduction of AIR is that is has significantly lowered the barrier to entry for developers interested in developing desktop applications.  While this has the powerful effect of democratizing access to the desktop, it does raise some fundamental issues and fears.</p>
+
+<p><a id="more"></a><a id="more-7"></a>
+Perhaps a portion of this fear is a personal reactionary response primarily linked to living through the era of &quot;Skip Intro&quot; and being subjected to entirely gratuitous and/or inappropriate uses of Flash.  However, Flash intros were harmless to a user&#39;s machine and for the most part were really only were a nuisance as they primarily affected a user&#39;s utilization of  slow connections and their patience. This is because a user&#39;s underlying OS is shielded in most cases (unless you happen to be using IE) by the security provided by the browser&#39;s security sandbox. Not to say that security is not a consideration with web applications, but when it is, the vast majority of those considerations surround the protection of sensitive data such as bank account info and role-based functionality in the case of something like an adminstrative delete function.  Those same assumptions while still valid when applied to a desktop application neglect to account for some fundamental differences in those environments.</p>
+
+<p>AIR opens the user&#39;s file system to read and write access for the installed application (it should be noted that it runs within the user&#39;s established security sandbox and retains the same permissions).  This places a tremendous responsibility on the shoulders of the developer to create software in a responsible manner.  However, this model also places responsibility on the user who may be installing that AIR application to make sure that the application that they are installing is from a reputable source and is not likely to contain either malicious or harmful code.  My fear is that consumers will, as with most new technologies, and especially one that presents an entirely new model of deployment, will fundamentally misunderstand that downloading and installing an AIR application is fundamentally the same as downloading and installing an executable .exe or .app.</p>
+
+<p>It will be interesting to see how exactly Adobe markets AIR on a consumer level, if at all, or if it will fall primarily to the development community to become the distribution channel for the actual AIR runtime as it has largely with Flash Player. Regardless of what happens on a consumer level, a fundamental shift needs to occur not really in development methodologies and techniques, but in terms of the oft-ignored ancillary aspects of software development.
+That being said, as part of the developer community, there are some things that we can do to ensure that AIR is successful as a development platform:</p>
+
+<p><strong>Quality Assurance</strong></p>
+
+<p>The first best practice is to follow a rigorous quality assurance process.  This can help avoid a ridiculous stream of support emails.  While the software that you are developing may be small in scope and not require a dedicated QA engineer, the best thing to do is share with others around you.  They are a tremendous resource in identifying and tracking down bugs that may have been missed while coding on the 15th cup of coffee at 3am. The bottom line is that you want your users to trust the software that you are delivering to them not to erase a large portion of their drive nor any other destructive activity.</p>
+
+<p><strong>Legalese</strong></p>
+
+<p>How many web applications have you developed where you have had to write Privacy Policies, Terms and Conditions and an End-User License Agreement? From what I&#39;ve seen most seems to be copied-and-pasted from one site to the next.  While this may work, it should be noted that those densely worded, Latin-phrase-peppered documents are there for one reason - to protect the site owners and developers from legals issues that may arise from the use of that website.</p>
+
+<p>When developing desktop applications, those sorts of indemnification clauses become that much more important because there are many more things that can go wrong.  Do yourself a favor and protect yourself and your assets if some sort of issue does happen to arise from software that you have authored.</p>
+
+<p><strong>Code Signing</strong></p>
+
+<p>As with any technology, there will be those that choose to use AIR for malicious purposes.  An important consideration with AIR is providing end users with the ability to make an informed decision as to whether or not a piece of software will damage their system or otherwise interfere with their lives by doing something like sniffing out and collecting private data from their hard drive.  This is easier to do with something like packaged software, being as how a consumer has a brand and shrink wrap to help them be convinced of the legitimacy of a software product.  This is obviously not so for software that is delivered electronically, as a vast majority of AIR applications will be.</p>
+
+<p>While it may not be supported in the alpha and beta releases of AIR, in future releases, the process of code signing will be important for an AIR developer in order to gain the user&#39;s trust when installing an application.  For those not familiar, code signing servers two essential security functions for electronic software delivery:
+<ul>
+    <li>Verifying the identity of the software publisher</li>
+    <li>Verifying that code being delivered to the user has not been tampered with either prior to or during the delivery process</li>
+</ul>
+While I haven&#39;t seen any news of any Digital ID certificates being offered for AIR publishers, I am sure that announcements will be forthcoming from someone like Verisign.  Verisign currently offers certificates for Shockwave publishers.</p>
+
+</div>
+
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  Your Name<br />
+                  What You Are<br />
+                  your@email.com
+                </p>
+              </div>
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/yourusername/">github.com/yourusername</a><br />
+                  <a href="http://twitter.com/yourusername/">twitter.com/yourusername</a><br />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /container -->
+
+    </body>
+</html>
